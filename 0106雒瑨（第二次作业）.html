@@ -1,0 +1,113 @@
+﻿<html>
+<head>
+  <style>
+  td {
+    height: 3em;
+    width: 5em;
+    text-align: center;
+    box-shadow: 3px 3px 2px 2px #e3e5e5;
+  }
+
+  td:hover {
+    position: relative;
+    top:-2px;
+    left: 2px;
+
+  }
+
+  .cell {
+    height: 5em;
+    width: 15em;
+  }
+
+  .cell > .detail {
+    display: none;
+  }
+
+  .cell > .detail.open {
+    display: block;
+    position: absolute;
+    height: 10em;
+    width: 10em;
+    background-color: antiquewhite;
+  }
+
+  </style>
+</head>
+<body>
+  <table id="grid">
+  </table>
+
+  <script>
+    let schedule=new Array(" ", "星期一", "星期二", "星期三", "星期四", "星期五",
+      "第一节", "web应用开发技术", "大学英语四级（A）", "管理信息系统", "数据库原理及应用", "大学英语英语四级（A）", 
+      "第二节", "web应用开发技术", "大学英语四级（A）", "管理信息系统", "数据库原理及应用", "大学英语英语四级（A）",	   
+      "第三节", "毛泽东思想与中国特色社会主义理论", "管理科学基础", "毛泽东思想与中国特色社会主义理论", "管理科学基础", "运营管理", 
+      "第四节", "毛泽东思想与中国特色社会主义理论", "管理科学基础", "毛泽东思想与中国特色社会主义理论", "管理科学基础", "运营管理", 
+      "","","","","","",
+      "第五节", "管理信息系统", "形势与政策", "会计学", "体育", "毛泽东思想与中国特色社会主义理论",
+      "第六节", "管理信息系统", "形势与政策", "会计学", "体育", "毛泽东思想与中国特色社会主义理论",
+      "第七节", "电子商务", "数据库原理及应用", " ", "会计学","",
+      "第八节", "电子商务", "数据库原理及应用", " ", "会计学",""，
+      "","","","","","",);
+    let schedule2=new Array(" ", "星期一", "星期二", "星期三", "星期四", "星期五",
+      "第一节", "第一公共教学楼C411,1~15上，授课老师：吕成功", "第一公共教学楼C221，1~17上，授课老师：张蔚", "第一公共教学楼C105，1~15上，授课老师：刘烨，单周", "第一公共教学楼B405，2~14上，授课老师：吴君", "单周：外国语学院219，双周：第一公共教学楼C219，2~16上，老师：张蔚", 
+      "第二节", "第一公共教学楼C411,1~15上，授课老师：吕成功", "第一公共教学楼C221，1~17上，授课老师：张蔚", "第一公共教学楼C105，1~15上，授课老师：刘烨，单周", "第一公共教学楼B405，2~14上，授课老师：吴君", "单周：外国语学院219，双周：第一公共教学楼C219，2~16上，老师：张蔚", 
+      "第三节", "第一公共教学楼A120，1~16上，授课老师：顾洪英", "第一公共教学楼C411，3~17上，授课老师：赵方方", "第一公共教学楼A120 1~16上，授课老师：顾洪英", "第一公共教学楼C411，3~17上，授课老师：赵方方", "第一公共教学楼B405，1~15上，授课老师：刘亮、邓华", 
+      "第四节", "第一公共教学楼A120，1~16上，授课老师：顾洪英", "第一公共教学楼C411，3~17上，授课老师：赵方方", "第一公共教学楼A120 1~16上，授课老师：顾洪英", "第一公共教学楼C411，3~17上，授课老师：赵方方", "第一公共教学楼B405，1~15上，授课老师：刘亮、邓华", 
+      "","","","","","",
+      "第五节", "第一公共教学楼C105，1~15上，授课老师：刘烨，单周", "第一公共教学楼C123，5~7上，授课老师：李坤", "第一公共教学楼B101，1~17上，授课老师：刘晓晖，单周", "体育馆,1~15周上", "第一公共教学楼A120 1~16上，授课老师：顾洪英", 
+      "第六节", "第一公共教学楼C105，1~15上，授课老师：刘烨，单周", "第一公共教学楼C123，5~7上，授课老师：李坤", "第一公共教学楼B101，1~17上，授课老师：刘晓晖，单周", "体育馆,1~15周上", "第一公共教学楼A120 1~16上，授课老师：顾洪英", 
+      "第七节", "第一公共教学楼B303，3~17上，授课老师：张亮","第一公共教学楼C109，2~14，授课老师：吴君", "NULL", "第一公共教学楼B101，1~17上，授课老师：刘晓晖", "NULL",
+      "第八节", "第一公共教学楼B303，3~17上，授课老师：张亮","第一公共教学楼C109，2~14，授课老师：吴君", "NULL", "第一公共教学楼B101，1~17上，授课老师：刘晓晖", "NULL",
+      "","","","","","",);
+
+    let tblEl = document.getElementById('grid');
+    for (let i = 0; i < 11; i++) {
+      let trEl = document.createElement('tr');
+      for (let j = 0; j < 6; j++) {
+        let tdEl = document.createElement('td');
+        let divEl = document.createElement('div')
+        divEl.className = 'cell';
+        
+        let detailDivEl = document.createElement('div');
+
+        if (i != 0 && j!=0 && (......) != 0)		      
+          {		        
+            detailDivEl.className = 'detail';	
+          detailDivEl.innerHTML = schedule2[.......];	
+          }
+
+        detailDivEl.onmouseout =function(event) {
+          let names = detailDivEl.className.split(' ');
+          names = names.filter((x) => x != 'open')
+          detailDivEl.className = names.join(' ');
+        }
+        divEl.append(detailDivEl);
+
+        let briefDivEl = document.createElement('div');
+        briefDivEl.innerHTML = schedule[.......];
+        divEl.append(briefDivEl);
+        tdEl.onclick = function(event) {
+          let names = detailDivEl.className.split(' ');
+
+          if (names.indexOf('open') >= 0) {
+            names = names.filter((x) => x != 'open')
+          } else {
+            names.push('open');
+          }
+          detailDivEl.className = names.join(' ');
+
+
+        };
+
+        tdEl.append(divEl);
+        trEl.append(tdEl);
+      }
+      tblEl.append(trEl);
+    }
+
+  </script>
+</body>
+
+</html>
